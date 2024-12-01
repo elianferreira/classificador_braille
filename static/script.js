@@ -8,7 +8,7 @@ document.querySelectorAll('.braille-key').forEach(image => {
 
         try {
             // Enviar requisição para a API
-            const response = await fetch('/predict', {
+            const response = await fetch('http://127.0.0.1:5000/predict', { // URL completa do servidor
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,3 +33,4 @@ document.querySelectorAll('.braille-key').forEach(image => {
         }
     });
 });
+
