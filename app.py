@@ -1,13 +1,30 @@
+import os
+import sys
 from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS  # Importar CORS
 import tensorflow as tf
 import numpy as np
 from PIL import Image
 
-# Inicializar Flask
-app = Flask(__name__, template_folder="templates", static_folder="static")
+# Detectar se estamos rodando em modo congelado (PyInstaller)
+if getattr(sys, 'frozen', False):
+    base_dir = sys._MEIPASS  # Diretório temporário criado pelo PyInstaller
+else:
+    base_dir = os.path.abspath(os.path.dirname(__file__))
+
+# Inicializar Flask com caminhos corrigidos para PyInstaller
+app = Flask(
+    __name__,
+    template_folder=os.path.join(base_dir, "templates"),
+    static_folder=os.path.join(base_dir, "static")
+)
+
+# Habilitar CORS
+CORS(app)  # Permitir CORS para todas as rotas
 
 # Carregar o modelo treinado
-model = tf.keras.models.load_model('./models/modelo_letras.h5')
+model_path = os.path.join(base_dir, 'models', 'modelo_letras.h5')
+model = tf.keras.models.load_model(model_path)
 class_names = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
                'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
@@ -41,7 +58,7 @@ def predict():
             return jsonify({'error': 'Nenhuma imagem foi especificada.'}), 400
 
         image_name = data['image']
-        image_path = f"./static/braille/{image_name}"  # Caminho da imagem no servidor
+        image_path = os.path.join(base_dir, "static", "braille", image_name)  # Caminho corrigido
         processed_image = process_image(image_path)
 
         # Faz a predição
@@ -55,3 +72,4 @@ def predict():
 # Executar a API
 if __name__ == '__main__':
     app.run(debug=True)
+
