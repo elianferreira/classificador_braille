@@ -6,6 +6,6 @@
 
 <h2>Instruções:</h2>
 <br>
-- Descompactar a pasta
-- Acessar a pasta dist
+- Descompactar a pasta <br>
+- Acessar a pasta dist <br>
 - Executar o app.exe
