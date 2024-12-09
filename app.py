@@ -90,4 +90,10 @@ def predict_via_upload():
 
 # Executar a API
 if __name__ == '__main__':
-    app.run(debug=False)
+    try:
+        app.run(debug=False)
+    except Exception as e:
+        print(f"Erro: {e}")
+    finally:
+        input("Pressione Enter para sair...")
+
